@@ -25,6 +25,7 @@ jobs:
         
     - name: Run news scraper
       run: |
+        cd News_classification_UpDown
         python daily_news.py
         
     - name: Commit and push results
