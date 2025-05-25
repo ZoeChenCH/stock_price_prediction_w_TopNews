@@ -22,6 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install -r News_classification_UpDown/requirements.txt
         
     - name: Run news scraper
       run: |
