@@ -19,7 +19,7 @@ def fetch_top_news(days_ago=1, output_dir="daily_news"):
     top_articles = google_news.get_top_news()
     news_data = []
     count = 0
-
+    print(f"一共{len(top_articles)}則新聞")
     for a in top_articles:
         pub_date = a.get("published date")
         try:
