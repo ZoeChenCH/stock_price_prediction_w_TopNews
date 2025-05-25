@@ -1,5 +1,5 @@
 gnews==0.4.1
-dateutil==2.9.0.post0
+dateutil==2.9.0
 csv==0.0.13
 datetime==5.5
 
