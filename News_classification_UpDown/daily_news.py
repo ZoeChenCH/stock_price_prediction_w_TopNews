@@ -10,7 +10,7 @@ def fetch_top_news(days_ago=1, output_dir="daily_news"):
 
     google_news = GNews(language='en', country='US', max_results=100)
 
-    os.chdir('/Users/zhao-weichen/Zoe/Strock_tracking/News_classification_UpDown')
+    os.chdir('../News_classification_UpDown')
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, f"news_{date_str}.csv")
 
