@@ -37,29 +37,20 @@ jobs:
       run: |
         git config --local user.email "wirolo29837@gmail.com"
         git config --local user.name "ZoeChenCH"
-        git pull origin main --rebase
-        git add News_classification_UpDown/daily_news/
-        if git diff --staged --quiet; then
-          echo "No changes to commit"
-        else
+        # Stage all changes
+        git add .
+        
+        # Only proceed if there are staged changes
+        if ! git diff --staged --quiet; then
+          echo "Committing changes..."
           git commit -m "Update news data - $(date)"
-          # Try to push, with retry logic
-          max_attempts=3
-          attempt=1
-          while [ $attempt -le $max_attempts ]; do
-            if git push origin main; then
-              echo "Successfully pushed on attempt $attempt"
-              break
-            else
-              echo "Push failed on attempt $attempt, pulling and retrying..."
-              git pull origin main --rebase
-              attempt=$((attempt + 1))
-              sleep 5
-            fi
-          done
           
-          if [ $attempt -gt $max_attempts ]; then
-            echo "Failed to push after $max_attempts attempts"
-            exit 1
-          fi
+          # Simple push with force-with-lease (safer than force)
+          git push origin main || {
+            echo "Push failed, pulling and trying again..."
+            git pull origin main --strategy=recursive -X ours
+            git push origin main
+          }
+        else
+          echo "No changes to commit"
         fi
