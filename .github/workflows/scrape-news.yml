@@ -2,8 +2,8 @@ name: Daily News Scraper
 
 on:
   schedule:
-    # Runs at 9 AM Taiwan time daily (2 AM UTC)
-    - cron: '0 1 * * *'
+    # Runs at 9 AM Taiwan time daily (1 AM UTC)
+    - cron: '0 2 * * *'
   workflow_dispatch: # Allows manual triggering
 
 jobs:
