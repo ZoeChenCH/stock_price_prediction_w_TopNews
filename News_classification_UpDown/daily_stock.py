@@ -1,34 +1,24 @@
 import yfinance as yf
 import datetime
 import csv
+import pandas as pd
 
-# 計算昨天的日期
-yesterday = datetime.date.today() - datetime.timedelta(days=1)
-filename = f"stock_{yesterday}.csv"  # 用日期命名檔案
+start_date = "2025-04-01"
+end_date = "2025-05-31"
 
-# 指數名稱與代碼
-indices = {
-    'Dow Jones': '^DJI',
-    'S&P 500': '^GSPC',
-    'Nasdaq': '^IXIC'
-}
+twii = yf.download('^TWII', start=start_date, end=end_date)
+print(twii.head())
+twii['Change'] = twii['Close'].diff()/twii['Close'].shift(1)*100
 
-# 準備要寫入CSV的資料
-records = []
-
-for name, symbol in indices.items():
-    ticker = yf.Ticker(symbol)
-    hist = ticker.history(start=yesterday, end=yesterday + datetime.timedelta(days=1))
-    if not hist.empty:
-        close_price = hist['Close'][0]
-        records.append([name, symbol, yesterday.strftime('%Y-%m-%d'), round(close_price, 2)])
+def classify_movement(change):
+    if change > 0.1:
+        return 'bullish'
+    elif change < -0.1:
+        return 'bearish'
     else:
-        records.append([name, symbol, yesterday.strftime('%Y-%m-%d'), 'No data'])
+        return 'flat'
 
-# 寫入 CSV
-with open(filename, mode='w', newline='', encoding='utf-8') as file:
-    writer = csv.writer(file)
-    writer.writerow(['Index Name', 'Symbol', 'Date', 'Close Price'])
-    writer.writerows(records)
+twii['Movement'] = twii['Change'].apply(classify_movement)
+print(twii[['Close', 'Change', 'Movement']].head())
 
-print(f"資料已儲存為：stock_{filename}")
+
